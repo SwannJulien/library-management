@@ -1,0 +1,9 @@
+.bookContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.blockContainer {
+  display: flex;
+  flex-direction: column;
+}

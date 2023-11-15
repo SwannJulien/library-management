@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  gap: 5rem;
+  margin-top: 5rem;
+}
+.leftFrame {
+  border: 0.1px solid #e0dfdf;
+  border-radius: 20px;
+  padding: 1rem;
+  background-color: #fafafa;
+  width: 100%;
+  text-align: center;
+}
+.rightFrame {
+  border: 0.1px solid #e0dfdf;
+  border-radius: 20px;
+  padding: 1rem;
+  background-color: #fafafa;
+  width: 100%;
+  text-align: center;
+}
+.middleFrame {
+  padding: 1rem;
+  width: 50%;
+  text-align: center;
+}
+.bookContainer {
+  display: flex;
+  gap: 20px;
+}
