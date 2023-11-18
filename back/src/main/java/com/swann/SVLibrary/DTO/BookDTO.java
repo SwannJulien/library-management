@@ -1,5 +1,6 @@
-package com.swann.SVLibrary.book;
+package com.swann.SVLibrary.DTO;
 
+import com.swann.SVLibrary.book.Cover;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;

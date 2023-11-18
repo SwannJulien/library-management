@@ -1,9 +1,12 @@
 package com.swann.SVLibrary.copy;
 
-import com.swann.SVLibrary.CustomException;
+
+import com.swann.SVLibrary.DTO.CopyDTO;
 import com.swann.SVLibrary.book.Book;
 import com.swann.SVLibrary.book.BookRepository;
 import com.swann.SVLibrary.book.BookService;
+import com.swann.SVLibrary.borrowing.Borrowing;
+import com.swann.SVLibrary.borrowing.BorrowingRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ public class CopyService {
     private CopyRepository copyRepository;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private BorrowingRepository borrowingRepository;
 
     // Add a copy of an existing book into the DB
     public Copy addCopyOfExistingBook(String isbn) {
@@ -61,22 +66,40 @@ public class CopyService {
 
     // Delete a copy thanks to its id
     public String removeCopy(String id){
-        Optional<Copy> copy = findCopyById(id);
-        copyRepository.deleteById(copy.get().getId());
-        return "Copy with id " + id + " has been removed correctly";
+
+        Optional<Copy> optionalCopy = findCopyById(id);
+        if (optionalCopy.isPresent()){
+           Copy copy = optionalCopy.get();
+           ObjectId copyId = copy.getId();
+           Optional<Borrowing> optionalBorrowing = borrowingRepository.findByCopyId(copyId);
+
+           if (optionalBorrowing.isPresent()){
+               throw new RuntimeException("There is an active borrowing for this book. " +
+                       "First you need to delete the borrowing. Only then you could delete the copy.");
+           } else {
+               String bookId = copy.getBookId().toHexString();
+               List<Copy> copies = findAllCopiesOfaBook(bookId);
+               if (copies.size() > 1){
+                   bookService.removeBook(copy.getBookId());
+                   return "This is the last copy of this book. The book has been removed from the library";
+               } else {
+                   return "Copy with id " + id + " has been removed correctly";
+               }
+           }
+        } else return "No copy with id " + id + " has been found";
     }
 
     // Return all copies associated to a book which isbn is passed in parameter
-    public List<Copy> findAllCopiesOfaBook(String isbn){
+    public List<Copy> findAllCopiesOfaBook(String id){
         // Find the book by its isbn
-        Optional<Book> bookOptional = bookService.findBookByIsbn(isbn);
+        Optional<Book> bookOptional = bookService.findBookByIdString(id);
         if (bookOptional.isPresent()) {
             // If the book is found, find all copies associated with its ID
             Book book = bookOptional.get();
             return copyRepository.findAllByBookId(book.getId());
         } else {
             // Handle the case where the book with the given ISBN is not found
-            throw new IllegalArgumentException("No book with isbn " + isbn + " in the database");
+            throw new IllegalArgumentException("No book with isbn " + id + " in the database");
         }
     }
 
@@ -88,6 +111,6 @@ public class CopyService {
             copyRepository.save(copy);
             String message = isAvailable ? "is now available" : "is now not available";
             return "The copy with id " + id + " " + message;
-        } else throw new CustomException.ResourceNotFoundException("No copy with id " + id + " in the database");
+        } else throw new RuntimeException("No copy with id " + id + " in the database");
     }
 }

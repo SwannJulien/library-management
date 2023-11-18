@@ -1,9 +1,7 @@
 package com.swann.SVLibrary.book;
 
-import com.swann.SVLibrary.borrowing.Borrowing;
+import com.swann.SVLibrary.DTO.BookDTO;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +44,7 @@ public class BookController {
     public Optional<Book> getBookByIsbn(@PathVariable String isbn){
         Optional<Book> book = bookService.findBookByIsbn(isbn);
         if (book.isEmpty())
-            throw new RuntimeException("Isbn number is not valid. Must be 10 or 13 characters");
+            throw new RuntimeException("No book with ISBN " + isbn + " has been found in the library.");
         return book;
     }
 
@@ -54,7 +52,7 @@ public class BookController {
     public Optional<Book> getBookByIdString(@PathVariable String id){
         Optional<Book> book = bookService.findBookByIdString(id);
         if (book.isEmpty())
-            throw new RuntimeException("Id not valid");
+            throw new RuntimeException("No ID has been provided. Please send a valid ID");
         return book;
     }
 
@@ -62,11 +60,9 @@ public class BookController {
     public Optional<BookDTO> getBookById(@PathVariable String id){
         Optional<BookDTO> book = bookService.findBookByCopyId(id);
         if (book.isEmpty())
-            throw new RuntimeException("Id not valid");
+            throw new RuntimeException("No ID has been provided. Please send a valid ID");
         return book;
     }
-
-
 
     @PostMapping("books/{isbn}/addSubject")
     public String addSubjectToExistingBook(

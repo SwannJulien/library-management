@@ -1,24 +1,29 @@
 "use client";
 import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function AddUser() {
   const [serverResponse, setServerResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(true);
   const formRef = useRef(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  async function onSubmit(data) {
     setLoading(true);
 
-    const firstName = event.target.firstName.value;
-    const lastName = event.target.lastName.value;
-    const classYear = event.target.classYear.value;
-    const yearGroup = event.target.yearGroup.value;
-    const house = event.target.house.value;
-    const email = event.target.email.value;
-    const phoneNumber = event.target.phoneNumber.value;
-    const role = event.target.role.value;
+    const firstName = data.firstName;
+    const lastName = data.lastName;
+    const classYear = data.classYear;
+    const yearGroup = data.yearGroup;
+    const house = data.house;
+    const email = data.email;
+    const phoneNumber = data.phoneNumber;
+    const role = data.role;
 
     const user = {
       firstName: firstName,
@@ -54,30 +59,57 @@ export default function AddUser() {
     <main className="container mb-5 mt-5">
       <h1 className="text-center ">Add a new user</h1>
       <p className="mt-5 mb-2 text-center">Please fill up all fields of the form to add a new user.</p>
-      <form onSubmit={handleSubmit} ref={formRef}>
+      <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
         <div className="mb-3">
           <label htmlFor="firstName" className="form-label">
             First name
           </label>
-          <input type="text" name="firstName" className="form-control" id="firstName" required />
+          <input
+            type="text"
+            name="firstName"
+            className={`form-control ${errors.firstName ? "is-invalid" : ""}`}
+            id="firstName"
+            {...register("firstName", {
+              required: "You must provide the first name",
+            })}
+          />
+          <p className="text-danger">{errors.firstName && errors.firstName.message}</p>
         </div>
         <div className="mb-3">
           <label htmlFor="lastName" className="form-label">
             Last name
           </label>
-          <input type="text" name="lastName" className="form-control" id="lastName" required />
+          <input
+            type="text"
+            name="lastName"
+            className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
+            id="lastName"
+            {...register("lastName", {
+              required: "You must provide the last name",
+            })}
+          />
+          <p className="text-danger">{errors.lastName && errors.lastName.message}</p>
         </div>
         <div className="mb-3">
           <label htmlFor="classYear" className="form-label">
             Class year
           </label>
-          <input type="text" name="classYear" className="form-control" id="classYear" required />
+          <input
+            type="text"
+            name="classYear"
+            className={`form-control ${errors.classYear ? "is-invalid" : ""}`}
+            id="classYear"
+            {...register("classYear", {
+              pattern: { value: /^[0-9]/, message: "Must be a number" },
+            })}
+          />
+          <p className="text-danger">{errors.classYear && errors.classYear.message}</p>
         </div>
         <div className="mb-3">
           <label htmlFor="yearGroup" className="form-label">
             Year group
           </label>
-          <input type="text" name="yearGroup" className="form-control" id="yearGroup" required />
+          <input type="text" name="yearGroup" className="form-control" id="yearGroup" />
         </div>
         <div className="mb-3">
           <label htmlFor="house" className="form-label">
@@ -89,7 +121,17 @@ export default function AddUser() {
           <label htmlFor="email" className="form-label">
             Email
           </label>
-          <input type="email" name="email" className="form-control" id="email" required />
+          <input
+            type="email"
+            name="email"
+            className={`form-control ${errors.email ? "is-invalid" : ""}`}
+            id="email"
+            {...register("email", {
+              required: "You must provide an email",
+              pattern: { value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, message: "Invalid email address" },
+            })}
+          />
+          <p className="text-danger">{errors.email && errors.email.message}</p>
         </div>
         <div className="mb-3">
           <label htmlFor="phoneNumber" className="form-label">
@@ -107,16 +149,36 @@ export default function AddUser() {
         </p>
 
         <div className="form-check">
-          <input className="form-check-input" type="radio" name="role" id="student" value="Student" required />
+          <input
+            className="form-check-input"
+            type="radio"
+            name="role"
+            id="student"
+            value="Student"
+            {...register("role", {
+              required: "You must provide the user's role",
+            })}
+          />
           <label className="form-check-label" htmlFor="student">
             Student
           </label>
         </div>
         <div className="form-check">
-          <input className="form-check-input" type="radio" name="role" id="admin" value="Admin" required />
+          <input
+            className="form-check-input"
+            type="radio"
+            name="role"
+            id="admin"
+            value="Admin"
+            {...register("role", {
+              required: "You must provide the user's role",
+            })}
+          />
+
           <label className="form-check-label" htmlFor="admin">
             Admin
           </label>
+          <p className="text-danger">{errors.role && errors.role.message}</p>
         </div>
 
         <button type="submit" className="btn btn-primary mt-3">

@@ -1,6 +1,7 @@
 package com.swann.SVLibrary.borrowing;
 
-import com.swann.SVLibrary.CustomException;
+
+import com.swann.SVLibrary.DTO.BorrowingDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class BorrowingController {
         try{
             borrowingService.removeBorrowing(copyId);
             return ResponseEntity.status(HttpStatus.OK).body("Borrowing of copy id " + copyId + " correctly deleted");
-        } catch (CustomException.ResourceNotFoundException e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(
                     HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());

@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+
 export default function AddManually() {
   const [serverResponse, setServerResponse] = useState("");
   const [loading, setLoading] = useState(false);
@@ -8,21 +10,26 @@ export default function AddManually() {
   const [title, setTitle] = useState("");
   const formRef = useRef(null);
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  function onSubmit(data) {
+    //event.preventDefault();
     setLoading(true);
 
-    const isbn = event.target.isbn.value;
-    const title = event.target.title.value;
-    const author = event.target.author.value;
-    const numberOfPages = event.target.numberOfPages.value;
-    const publisher = event.target.publisher.value;
-    const publishDate = event.target.publishDate.value;
-    const publishPlaces = event.target.publishPlaces.value;
-    const subjects = event.target.subjects.value;
-    const subjectPlaces = event.target.subjectPlaces.value;
-    const subjectPeople = event.target.subjectPeople.value;
+    const isbn = data.isbn;
+    const title = data.title;
+    const author = data.author;
+    const numberOfPages = data.numberOfPages;
+    const publisher = data.publisher;
+    const publishDate = data.publishDate;
+    const publishPlaces = data.publishPlaces;
+    const subjects = data.subjects;
+    const subjectPlaces = data.subjectPlaces;
+    const subjectPeople = data.subjectPeople;
 
     renderData(isbn, title, author, numberOfPages, publisher, publishDate, publishPlaces, subjects, subjectPlaces, subjectPeople);
     formRef.current.reset();
@@ -107,12 +114,24 @@ export default function AddManually() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} ref={formRef}>
+      <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
         <div className="mb-3">
           <label htmlFor="isbn" className="form-label">
             ISBN
           </label>
-          <input type="text" className="form-control input" id="isbn" name="isbn" aria-describedby="isbnHelp" required />
+          <input
+            type="text"
+            className={`form-control ${errors.isbn ? "is-invalid" : ""}`}
+            id="isbn"
+            name="isbn"
+            aria-describedby="isbnHelp"
+            {...register("isbn", {
+              required: "You must provide an ISBN",
+              minLength: { value: 10, message: "ISBN must be at least 10 characters long" },
+              maxLength: { value: 13, message: "ISBN must be 13 characters long maximum" },
+            })}
+          />
+          <p className="text-danger">{errors.isbn && errors.isbn.message}</p>
           <div id="isbnHelp" className="form-text">
             Either ISBN 10 or ISBN 13
           </div>
@@ -121,14 +140,33 @@ export default function AddManually() {
           <label htmlFor="title" className="form-label">
             Title
           </label>
-          <input type="text" className="form-control" id="title" name="title" onChange={handleTitleChange} required />
+          <input
+            type="text"
+            className={`form-control ${errors.title ? "is-invalid" : ""}`}
+            id="title"
+            name="title"
+            onChange={handleTitleChange}
+            {...register("title", {
+              required: "You must provide a title",
+            })}
+          />
+          <p className="text-danger">{errors.title && errors.title.message}</p>
         </div>
         <div className="mb-3">
           <label htmlFor="author" className="form-label">
             Author
           </label>
-          <input type="text" className="form-control" id="author" name="author" required />
+          <input
+            type="text"
+            className={`form-control ${errors.author ? "is-invalid" : ""}`}
+            id="author"
+            name="author"
+            {...register("author", {
+              required: "You must specify the author of the book",
+            })}
+          />
         </div>
+        <p className="text-danger">{errors.author && errors.author.message}</p>
         <div className="mb-3">
           <label htmlFor="numberOfPages" className="form-label">
             Number of pages

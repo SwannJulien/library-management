@@ -1,8 +1,10 @@
 import { Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import "./globals.css";
 import ImportBsJS from "./library/bootstrapJS";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +21,13 @@ export default function RootLayout({ children }) {
         <nav className="navbar navbar-expand-lg bg-light">
           <div className="container-fluid">
             <Link href={"/"} className="navbar-brand">
-              <Image src="/SVLogo_no_bkg.png" width={110} height={80} alt="Sunny View School logo" />
+              <Image src="/ezlib.png" width={150} height={50} alt="EzLib logo" />
             </Link>
 
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
-            <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <div className="collapse navbar-collapse ms-5" id="navbarTogglerDemo02">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <div className="dropdown">
@@ -90,7 +92,7 @@ export default function RootLayout({ children }) {
             </div>
           </div>
         </nav>
-        {children}
+        <Suspense fallback={<Loading />}>{children}</Suspense>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 package com.swann.SVLibrary.user;
 
-import com.swann.SVLibrary.CustomException;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class UserService {
         try{
             return Optional.ofNullable(userRepository.findByEmail(email));
         } catch (Exception e){
-            throw new CustomException.ResourceNotFoundException("Email: " + email + " not found " + e.getMessage());
+            throw new RuntimeException("Email: " + email + " not found " + e.getMessage());
         }
     }
 
@@ -36,7 +36,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(restoredObjectId);
         if (user.isPresent())
             return user;
-        throw new CustomException.ResourceNotFoundException("User with id " + id + " is not found");
+        throw new RuntimeException("User with id " + id + " is not found");
     }
 
     public List<User> findAllUsers(){

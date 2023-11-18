@@ -1,10 +1,8 @@
 package com.swann.SVLibrary.copy;
 
+import com.swann.SVLibrary.DTO.CopyDTO;
 import com.swann.SVLibrary.book.BookService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +46,9 @@ public class CopyController {
         return copyService.removeCopy(id);
     }
 
-    @GetMapping("all-copies/{isbn}")
-    public List<Copy> findAllCopyOfaBook(@PathVariable String isbn){
-        return copyService.findAllCopiesOfaBook(isbn);
+    @GetMapping("all-copies/{id}")
+    public List<Copy> findAllCopyOfaBook(@PathVariable String id){
+        return copyService.findAllCopiesOfaBook(id);
     }
 
     @PatchMapping("copies/{id}/updateAvailability")

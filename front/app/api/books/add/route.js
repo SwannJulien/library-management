@@ -12,9 +12,7 @@ export async function POST(request) {
 
   if (!response.ok) {
     const message = await response.text();
-    //const message = serverResponse.message;
     const status = response.status;
-    //console.log(await response.json());
 
     return Response.json({ message, status });
   } else {

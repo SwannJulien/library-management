@@ -18,7 +18,6 @@ import java.util.List;
 public class Book {
     @Id
     private ObjectId id;
-    @Size(max=13,min=10,message="ISBN must be 10 or 13 characters")
     private String isbn10;
     private String isbn13;
     private String title;

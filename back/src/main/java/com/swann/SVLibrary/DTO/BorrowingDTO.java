@@ -1,4 +1,4 @@
-package com.swann.SVLibrary.borrowing;
+package com.swann.SVLibrary.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
