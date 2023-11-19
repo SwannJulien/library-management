@@ -18,6 +18,7 @@ import java.util.List;
 public class Book {
     @Id
     private ObjectId id;
+    // TODO: ISBN10 and 13 should be an array because Open Library return an array
     private String isbn10;
     private String isbn13;
     private String title;

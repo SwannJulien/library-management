@@ -33,7 +33,7 @@ public class BookService {
     protected static final Logger logger = LogManager.getLogger();
 
     // Add a book and a copy of this book in DB and return the id of the copy
-    public ObjectId addBookAndCopyToLibrary(Book book){
+    /*public ObjectId addBookAndCopyToLibrary(Book book){
         // Check if isbn 10 is 10 characters and isbn is 13 characters
         if (book.getIsbn10() !=null && book.getIsbn10().length() != 10){
             throw new RuntimeException("ISBN 10 must be 10 characters long.");
@@ -52,17 +52,47 @@ public class BookService {
                 throw new RuntimeException("Book with the same isbn " + isbn + " already exists");
             }
         }
+    }*/
+
+    public ObjectId addBookAndCopyToLibrary(Book book){
+        // Check if isbn 10 is 10 characters and isbn is 13 characters
+        if (book.getIsbn10() !=null && book.getIsbn10().length() != 10){
+            throw new IllegalArgumentException("ISBN must be either 10 or 13 characters long.");
+        } else if (book.getIsbn13() !=null && book.getIsbn13().length() != 13) {
+            throw new IllegalArgumentException("ISBN must be either 10 or 13 characters long.");
+        } else {
+            String isbn = book.getIsbn10() == null ? book.getIsbn13() : book.getIsbn10();
+            if (isbn != null) {
+                Optional<Book> optionalBook = findBookByIsbn(isbn);
+                // Avoid saving two books with the same isbn. Make isbn unique
+                if (optionalBook.isEmpty()){
+                    Book savedBook = bookRepository.save(book);
+                    Copy newCopy = new Copy(savedBook.getId(), true);
+                    Copy savedCopy =  copyRepository.save(newCopy);
+                    return savedCopy.getId();
+                } else {
+                    throw new RuntimeException("Book with the same isbn " + isbn + " already exists");
+                }
+            } else {
+                throw new RuntimeException("ISBN cannot be null.");
+            }
+        }
     }
 
     // Receive an isbn in parameter and look for the corresponding book
     public Optional<Book> findBookByIsbn(String isbn) {
-        if (isbn.length() < 10 || isbn.length() > 13){
-            throw new RuntimeException("ISBN must be 10 or 13 characters.");
-        } else if (isbn.length() == 10) {
-            return Optional.ofNullable(bookRepository.findByIsbn10(isbn));
-        } else if (isbn.length() == 13) {
-            return Optional.ofNullable(bookRepository.findByIsbn13(isbn));
-        } else throw new RuntimeException("Something wrong happens. Please try again.");
+        if (isbn == null) {
+            throw new IllegalArgumentException("ISBN cannot be null");
+        } else {
+            int isbnLength = isbn.length();
+            if (isbnLength < 10 || isbnLength > 13){
+                throw new RuntimeException("ISBN must be 10 or 13 characters.");
+            } else if (isbn.length() == 10) {
+                return bookRepository.findByIsbn10(isbn);
+            } else if (isbn.length() == 13) {
+                return bookRepository.findByIsbn13(isbn);
+            } else throw new RuntimeException("Something wrong happens. Please try again.");
+        }
     }
 
     // Receive a book id as a String and look for the corresponding book

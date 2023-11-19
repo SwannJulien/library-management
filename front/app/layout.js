@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
                       </li>
                       <li>
                         <Link href="/books/add" className="dropdown-item">
-                          Add books
+                          Add book
                         </Link>
                       </li>
                     </ul>

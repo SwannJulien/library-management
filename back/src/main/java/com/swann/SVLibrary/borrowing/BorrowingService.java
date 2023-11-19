@@ -50,7 +50,7 @@ public class BorrowingService {
 
             // 2. Check if user has exceeded the max of borrowings allowed
                 List<Borrowing> borrowingPerUser = getBorrowingByUser(userObjectId.toHexString());
-                boolean isOverLimit = borrowingPerUser.size() > MAX_BORROWINGS_ALLOWED;
+                boolean isOverLimit = borrowingPerUser.size() >= MAX_BORROWINGS_ALLOWED;
                 if (isOverLimit) {
                     throw new RuntimeException("User " + user.getFirstName() + " " + user.getLastName() + " has exceeded the number of borrowings allowed");
 

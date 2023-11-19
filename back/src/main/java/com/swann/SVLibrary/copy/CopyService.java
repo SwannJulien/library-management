@@ -7,6 +7,8 @@ import com.swann.SVLibrary.book.BookRepository;
 import com.swann.SVLibrary.book.BookService;
 import com.swann.SVLibrary.borrowing.Borrowing;
 import com.swann.SVLibrary.borrowing.BorrowingRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 @Service
 public class CopyService {
+    protected static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private BookRepository bookRepository;
@@ -78,11 +81,15 @@ public class CopyService {
                        "First you need to delete the borrowing. Only then you could delete the copy.");
            } else {
                String bookId = copy.getBookId().toHexString();
+               logger.info("BookId: " + bookId);
                List<Copy> copies = findAllCopiesOfaBook(bookId);
-               if (copies.size() > 1){
+               logger.info("Copies: " +copies);
+               if (copies.size() == 1){
+                   copyRepository.deleteById(copy.getId());
                    bookService.removeBook(copy.getBookId());
                    return "This is the last copy of this book. The book has been removed from the library";
                } else {
+                   copyRepository.deleteById(copy.getId());
                    return "Copy with id " + id + " has been removed correctly";
                }
            }

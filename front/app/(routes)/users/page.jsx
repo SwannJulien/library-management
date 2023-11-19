@@ -1,6 +1,6 @@
 async function getData() {
   const res = await fetch("http://localhost:8080/users/all", {
-    //next: { revalidate: 0 },
+    next: { revalidate: 0 },
   });
 
   if (!res.ok) {

@@ -70,14 +70,15 @@ export default function SaveButton({ data }) {
     // Get isbn_10 and isbn_13 as a string
     let isbn10, isbn13;
     const keys = Object.keys(book.identifiers);
+    console.log(keys);
 
     keys.forEach((key, index) => {
       switch (key) {
         case "isbn_10":
-          isbn10 = book.identifiers[key];
+          isbn10 = book.identifiers[key][0];
           break;
         case "isbn_13":
-          isbn13 = book.identifiers[key];
+          isbn13 = book.identifiers[key][0];
           break;
       }
     });

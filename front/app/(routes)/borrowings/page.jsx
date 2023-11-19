@@ -1,6 +1,6 @@
 async function getData() {
   const response = await fetch("http://localhost:8080/borrowings/show-all", {
-    //next: { revalidate: 0 },
+    next: { revalidate: 0 },
   });
 
   if (!response.ok) {

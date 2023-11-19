@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class BorrowingController {
 
     protected static final Logger logger = LogManager.getLogger();

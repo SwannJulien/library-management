@@ -7,7 +7,7 @@ export default function AddManually() {
   const [serverResponse, setServerResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [title, setTitle] = useState("");
+  //const [title, setTitle] = useState("");
   const formRef = useRef(null);
   const router = useRouter();
   const {
@@ -17,9 +17,8 @@ export default function AddManually() {
   } = useForm();
 
   function onSubmit(data) {
-    //event.preventDefault();
     setLoading(true);
-
+    //setTitle(data.title);
     const isbn = data.isbn;
     const title = data.title;
     const author = data.author;
@@ -102,14 +101,10 @@ export default function AddManually() {
       setSuccess(false);
     } else {
       setSuccess(true);
-      router.push(`/books/save/${copyId}?title=${title}`);
+      router.push(`/books/save/${copyId}?title=${book.title}`);
     }
     setServerResponse(message);
     setLoading(false);
-  }
-
-  function handleTitleChange(event) {
-    setTitle(event.target.value);
   }
 
   return (
@@ -145,7 +140,6 @@ export default function AddManually() {
             className={`form-control ${errors.title ? "is-invalid" : ""}`}
             id="title"
             name="title"
-            onChange={handleTitleChange}
             {...register("title", {
               required: "You must provide a title",
             })}

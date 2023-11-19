@@ -13,7 +13,7 @@ import java.util.Optional;
 @RestController
 //@AllArgsConstructor
 //@NoArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class CopyController {
 
     @Autowired
