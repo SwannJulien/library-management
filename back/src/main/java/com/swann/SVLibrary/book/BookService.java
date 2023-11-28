@@ -2,14 +2,10 @@ package com.swann.SVLibrary.book;
 
 
 import com.swann.SVLibrary.DTO.BookDTO;
-import com.swann.SVLibrary.borrowing.Borrowing;
-import com.swann.SVLibrary.borrowing.BorrowingRepository;
 import com.swann.SVLibrary.copy.Copy;
 import com.swann.SVLibrary.copy.CopyRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,34 +23,8 @@ public class BookService {
     private BookRepository bookRepository;
     @Autowired
     private CopyRepository copyRepository;
-    @Autowired
-    private BorrowingRepository borrowingRepository;
 
-    protected static final Logger logger = LogManager.getLogger();
-
-    // Add a book and a copy of this book in DB and return the id of the copy
-    /*public ObjectId addBookAndCopyToLibrary(Book book){
-        // Check if isbn 10 is 10 characters and isbn is 13 characters
-        if (book.getIsbn10() !=null && book.getIsbn10().length() != 10){
-            throw new RuntimeException("ISBN 10 must be 10 characters long.");
-        } else if (book.getIsbn13() !=null && book.getIsbn13().length() != 13) {
-            throw new RuntimeException("ISBN 13 must be 13 characters long.");
-        } else {
-            String isbn = book.getIsbn10() == null ? book.getIsbn13() : book.getIsbn10();
-            Optional<Book> optionalBook = findBookByIsbn(isbn);
-            // Avoid saving two books with the same isbn. Make isbn unique
-            if (optionalBook.isEmpty()){
-                Book savedBook = bookRepository.save(book);
-                Copy newCopy = new Copy(savedBook.getId(), true);
-                Copy savedCopy =  copyRepository.save(newCopy);
-                return savedCopy.getId();
-            } else {
-                throw new RuntimeException("Book with the same isbn " + isbn + " already exists");
-            }
-        }
-    }*/
-
-    public ObjectId addBookAndCopyToLibrary(Book book){
+    public String addBookAndCopyToLibrary(Book book){
         // Check if isbn 10 is 10 characters and isbn is 13 characters
         if (book.getIsbn10() !=null && book.getIsbn10().length() != 10){
             throw new IllegalArgumentException("ISBN must be either 10 or 13 characters long.");
@@ -70,42 +40,35 @@ public class BookService {
                     Copy newCopy = new Copy(savedBook.getId(), true);
                     Copy savedCopy =  copyRepository.save(newCopy);
                     return savedCopy.getId();
-                } else {
+                } else
                     throw new RuntimeException("Book with the same isbn " + isbn + " already exists");
-                }
-            } else {
+            } else
                 throw new RuntimeException("ISBN cannot be null.");
-            }
         }
     }
 
-    // Receive an isbn in parameter and look for the corresponding book
+    // Receive an isbn as a parameter and look for the corresponding book
     public Optional<Book> findBookByIsbn(String isbn) {
-        if (isbn == null) {
-            throw new IllegalArgumentException("ISBN cannot be null");
-        } else {
-            int isbnLength = isbn.length();
-            if (isbnLength < 10 || isbnLength > 13){
-                throw new RuntimeException("ISBN must be 10 or 13 characters.");
-            } else if (isbn.length() == 10) {
+        if (isbn != null && !isbn.isEmpty()){
+            if (isbn.length() == 10) {
                 return bookRepository.findByIsbn10(isbn);
             } else if (isbn.length() == 13) {
                 return bookRepository.findByIsbn13(isbn);
-            } else throw new RuntimeException("Something wrong happens. Please try again.");
-        }
+            } else throw new RuntimeException("ISBN must be 10 or 13 characters.");
+        } else throw new IllegalArgumentException("ISBN cannot be null");
     }
 
+// else throw new RuntimeException("Something wrong happens. Please try again.");
     // Receive a book id as a String and look for the corresponding book
     public Optional<Book> findBookByIdString(String id) {
-        ObjectId restoredObjectId = new ObjectId(id);
-        Optional<Book> book = bookRepository.findById(restoredObjectId);
+        Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent())
             return book;
         throw new IllegalArgumentException("No book with id " + id + " has been found in the library");
     }
 
     // Receive the book id as an ObjectId and look for the corresponding book
-    public Optional<Book> findBookById(ObjectId id){
+    public Optional<Book> findBookById(String id){
         Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent())
             return book;
@@ -113,25 +76,22 @@ public class BookService {
     }
     // Receive a copyId as a parameter and return the book dto of this copy
     public Optional<BookDTO> findBookByCopyId(String copyId){
-        // 1. Change the String id to an ObjectId
-        ObjectId restoredObjectId = new ObjectId(copyId);
+        // 1. Look for the copy in the database
+        Optional<Copy> optionalCopy = copyRepository.findById(copyId);
 
-        // 2. Look for the copy in the database
-        Optional<Copy> optionalCopy = copyRepository.findById(restoredObjectId);
-
-        // 3. Find the book of this copy in the database
+        // 2. Find the book of this copy in the database
         if (optionalCopy.isPresent()){
             Copy copy = optionalCopy.get();
-            ObjectId bookId = copy.getBookId();
+            String bookId = copy.getBookId();
             Optional <Book> optionalBook = findBookById(bookId);
 
-            // 4. Create the DTO with the book and the copy data
+            // 3. Create the DTO with the book and the copy data
             if(optionalBook.isPresent()){
                 Book book = optionalBook.get();
                 BookDTO bookDTO = new BookDTO();
-                bookDTO.setCopyId(copy.getId().toHexString());
+                bookDTO.setCopyId(copy.getId());
                 bookDTO.setIsAvailable(copy.getIsAvailable());
-                bookDTO.setId(book.getId().toHexString());
+                bookDTO.setId(book.getId());
                 bookDTO.setIsbn10(book.getIsbn10());
                 bookDTO.setIsbn13(book.getIsbn13());
                 bookDTO.setTitle(book.getTitle());
@@ -167,7 +127,7 @@ public class BookService {
         }
     }
 
-    public String removeBook(ObjectId id){
+    public String removeBook(String id){
         Optional <Book> optionalBook = findBookById(id);
         if (optionalBook.isPresent()){
             Book book = optionalBook.get();

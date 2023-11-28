@@ -57,7 +57,7 @@ export default function AddUser() {
 
   return (
     <main className="container mb-5 mt-5">
-      <h1 className="text-center ">Add a new user</h1>
+      <h1 className="text-center">Add a new user</h1>
       <p className="mt-5 mb-2 text-center">Please fill up all fields of the form to add a new user.</p>
       <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
         <div className="mb-3">

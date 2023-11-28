@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BorrowingRepository extends MongoRepository<Borrowing, ObjectId> {
-    Optional<Borrowing> findByCopyId(ObjectId restoredObjectId);
+public interface BorrowingRepository extends MongoRepository<Borrowing, String> {
+    Optional<Borrowing> findByCopyId(String copyId);
     List<Borrowing> findAllByUserId(ObjectId userId);
 }

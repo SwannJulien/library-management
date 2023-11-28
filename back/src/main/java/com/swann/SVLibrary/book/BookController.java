@@ -23,10 +23,10 @@ public class BookController {
     @PostMapping("/books")
     public ResponseEntity<String> addNewBook (@Valid @RequestBody Book book){
         try {
-            ObjectId copyId = bookService.addBookAndCopyToLibrary(book);
+            String copyId = bookService.addBookAndCopyToLibrary(book);
             return ResponseEntity.status(
                     HttpStatus.CREATED)
-                    .body(copyId.toHexString())
+                    .body(copyId)
                     ;
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(

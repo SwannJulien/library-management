@@ -14,13 +14,13 @@ import java.time.LocalDate;
 @Document(collection = "borrowings")
 public class Borrowing {
     @Id
-    private ObjectId id;
-    private ObjectId copyId;
-    private ObjectId userId;
+    private String id;
+    private String copyId;
+    private String userId;
     private LocalDate borrowDate;
     private LocalDate dueDate;
 
-    public Borrowing(ObjectId copyId, ObjectId userId, LocalDate borrowDate, LocalDate dueDate){
+    public Borrowing(String copyId, String userId, LocalDate borrowDate, LocalDate dueDate){
         this.copyId = copyId;
         this.userId = userId;
         this.borrowDate = borrowDate;

@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <ImportBsJS />
       <body className={inter.className}>
-        <nav className="navbar navbar-expand-lg bg-light">
+        <nav className="navbar navbar-expand-md bg-light">
           <div className="container-fluid">
             <Link href={"/"} className="navbar-brand">
               <Image src="/ezlib.png" width={150} height={50} alt="EzLib logo" />
@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
                   </div>
                 </li>
                 <div className="dropdown">
-                  <a className="nav-link active dropdown-toggle" aria-current="page" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a className="nav-link active dropdown-toggle ms-2" aria-current="page" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                     Users
                   </a>
                   <ul className="dropdown-menu">
@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
                   </ul>
                 </div>
                 <div className="dropdown">
-                  <a className="nav-link active dropdown-toggle" aria-current="page" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a className="nav-link active dropdown-toggle ms-2" aria-current="page" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                     Borrowings
                   </a>
                   <ul className="dropdown-menu">

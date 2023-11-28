@@ -26,8 +26,8 @@ public class BorrowingServiceTest {
         @Test
         public void testFindAllBorrowings() {
             // Arrange
-            Borrowing borrowing1 = new Borrowing(new ObjectId(), new ObjectId(), LocalDate.now(), LocalDate.now().plusDays(14));
-            Borrowing borrowing2 = new Borrowing(new ObjectId(), new ObjectId(), LocalDate.now(), LocalDate.now().plusDays(14));
+            Borrowing borrowing1 = new Borrowing(new String(), new String(), LocalDate.now(), LocalDate.now().plusDays(14));
+            Borrowing borrowing2 = new Borrowing(new String(), new String(), LocalDate.now(), LocalDate.now().plusDays(14));
             when(borrowingRepository.findAll()).thenReturn(Arrays.asList(borrowing1, borrowing2));
             // Act
             List<Borrowing> result = borrowingService.findAllBorrowings();

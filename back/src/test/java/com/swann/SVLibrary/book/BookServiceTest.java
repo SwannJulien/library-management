@@ -42,12 +42,12 @@ public class BookServiceTest {
     @Test
     public void testFindAllBooks() {
         // Arrange
-        Book book1 = new Book(new ObjectId(), "1234567890", "1234567890123", "Title1",
+        Book book1 = new Book(new String(), "1234567890", "1234567890123", "Title1",
                 Arrays.asList("Author1"), 200, Arrays.asList("Publisher1"),
                 "2023-01-01", Arrays.asList("Place1"), Arrays.asList("Subject1"),
                 Arrays.asList("PlaceSubject1"), Arrays.asList("Person1"), new Cover("urlSmall1", "urlMedium1", "urlLarge1"));
 
-        Book book2 = new Book(new ObjectId(), "isbn10_2", "isbn13_2", "Title2",
+        Book book2 = new Book(new String(), "isbn10_2", "isbn13_2", "Title2",
                         Arrays.asList("Author2"), 300, Arrays.asList("Publisher2"),
                         "2023-02-01", Arrays.asList("Place2"), Arrays.asList("Subject2"),
                         Arrays.asList("PlaceSubject2"), Arrays.asList("Person2"), new Cover("urlSmall2", "urlMedium2", "urlLarge2"));
@@ -82,7 +82,7 @@ public class BookServiceTest {
         when(bookRepository.save(any(Book.class))).thenReturn(mockBook());
         when(copyRepository.save(any(Copy.class))).thenReturn(new Copy(null, true));
         // Act
-        ObjectId copyId = bookService.addBookAndCopyToLibrary(mockBook());
+        String copyId = bookService.addBookAndCopyToLibrary(mockBook());
         // Assert
         assertNull(copyId);
     }

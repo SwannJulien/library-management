@@ -13,13 +13,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public class Copy {
     @Id
-    private ObjectId id;
-    private ObjectId bookId;
+    private String id;
+    private String bookId;
     private Boolean isAvailable;
 
     // Constructor
-    public Copy(ObjectId bookId, Boolean isAvailable){
-        this.bookId = bookId;
+    public Copy(String id, Boolean isAvailable){
+        this.bookId = id;
         this.isAvailable = isAvailable;
     }
 }

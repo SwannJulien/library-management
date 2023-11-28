@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface CopyRepository extends MongoRepository<Copy, ObjectId> {
-    List<Copy> findAllByBookId(ObjectId bookId);
+public interface CopyRepository extends MongoRepository<Copy, String> {
 
+    List<Copy> findAllByBookId(String bookId);
 }

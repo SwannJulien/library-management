@@ -46,9 +46,9 @@ public class CopyController {
         return copyService.removeCopy(id);
     }
 
-    @GetMapping("all-copies/{id}")
-    public List<Copy> findAllCopyOfaBook(@PathVariable String id){
-        return copyService.findAllCopiesOfaBook(id);
+    @GetMapping("all-copies/{bookId}")
+    public List<Copy> findAllCopiesOfaBook(@PathVariable String bookId){
+        return copyService.findAllCopiesOfaBook(bookId);
     }
 
     @PatchMapping("copies/{id}/updateAvailability")

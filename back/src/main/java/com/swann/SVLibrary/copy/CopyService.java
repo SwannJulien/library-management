@@ -46,21 +46,19 @@ public class CopyService {
 
     // Find a copy thanks to its id
     public Optional<Copy> findCopyById(String id) {
-        ObjectId restoredObjectId = new ObjectId(id);
-            Optional<Copy> copy = copyRepository.findById(restoredObjectId);
-            if (copy.isPresent())
-                return copy;
-            throw new IllegalArgumentException("Copy with id " + id + " doesn't exist in the DB");
+        Optional<Copy> copy = copyRepository.findById(id);
+        if (copy.isPresent())
+            return copy;
+        throw new IllegalArgumentException("Copy with id " + id + " doesn't exist in the DB");
     }
 
     public Optional <CopyDTO> findCopyDTOById(String id){
-        ObjectId restoredObjectId = new ObjectId(id);
-        Optional<Copy> optionalCopy = copyRepository.findById(restoredObjectId);
+        Optional<Copy> optionalCopy = copyRepository.findById(id);
         if (optionalCopy.isPresent()) {
             Copy copy = optionalCopy.get();
             CopyDTO copyDTO = new CopyDTO();
-            copyDTO.setId(copy.getId().toHexString());
-            copyDTO.setBookId(copy.getBookId().toHexString());
+            copyDTO.setId(copy.getId());
+            copyDTO.setBookId(copy.getBookId());
             copyDTO.setIsAvailable(copy.getIsAvailable());
             return Optional.of(copyDTO);
         }
@@ -73,14 +71,14 @@ public class CopyService {
         Optional<Copy> optionalCopy = findCopyById(id);
         if (optionalCopy.isPresent()){
            Copy copy = optionalCopy.get();
-           ObjectId copyId = copy.getId();
+           String copyId = copy.getId();
            Optional<Borrowing> optionalBorrowing = borrowingRepository.findByCopyId(copyId);
 
            if (optionalBorrowing.isPresent()){
                throw new RuntimeException("There is an active borrowing for this book. " +
                        "First you need to delete the borrowing. Only then you could delete the copy.");
            } else {
-               String bookId = copy.getBookId().toHexString();
+               String bookId = copy.getBookId();
                logger.info("BookId: " + bookId);
                List<Copy> copies = findAllCopiesOfaBook(bookId);
                logger.info("Copies: " +copies);
@@ -97,16 +95,16 @@ public class CopyService {
     }
 
     // Return all copies associated to a book which isbn is passed in parameter
-    public List<Copy> findAllCopiesOfaBook(String id){
-        // Find the book by its isbn
-        Optional<Book> bookOptional = bookService.findBookByIdString(id);
+    public List<Copy> findAllCopiesOfaBook(String bookId){
+        // Find the book by its id
+        Optional<Book> bookOptional = bookService.findBookByIdString(bookId);
         if (bookOptional.isPresent()) {
             // If the book is found, find all copies associated with its ID
             Book book = bookOptional.get();
-            return copyRepository.findAllByBookId(book.getId());
+            return copyRepository.findAllByBookId(bookId);
         } else {
             // Handle the case where the book with the given ISBN is not found
-            throw new IllegalArgumentException("No book with isbn " + id + " in the database");
+            throw new IllegalArgumentException("No book with isbn " + bookId + " in the database");
         }
     }
 

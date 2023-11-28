@@ -26,8 +26,8 @@ public class UserServiceTest {
     @Test
     public void testFindAllUsers() {
         // Arrange
-        User user1 = new User(ObjectId.get(), "User1F", "User1L", "2023", "A", "Gryffindor", "user1@example.com", "123456789", "Student");
-        User user2 = new User(ObjectId.get(), "User2F", "User2L", "2023", "B", "Hufflepuff", "user2@example.com", "2345678901", "Student");
+        User user1 = new User(new String(), "User1F", "User1L", "2023", "A", "Gryffindor", "user1@example.com", "123456789", "Student");
+        User user2 = new User(new String(), "User2F", "User2L", "2023", "B", "Hufflepuff", "user2@example.com", "2345678901", "Student");
         when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
         // Act
         List<User> result = userService.findAllUsers();
@@ -40,7 +40,7 @@ public class UserServiceTest {
     @Test
     void testAddUser() {
         // Arrange
-        User user = new User(ObjectId.get(), "User1F", "User1L", "2023", "A", "Gryffindor", "user1@example.com", "123456789", "Student");
+        User user = new User(new String(), "User1F", "User1L", "2023", "A", "Gryffindor", "user1@example.com", "123456789", "Student");
         // No user returned so can go to the next step
         when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
         // Act
@@ -52,7 +52,7 @@ public class UserServiceTest {
     @Test
     void testAddUserWithExistingEmail() {
         // Arrange
-        User user = new User(ObjectId.get(), "User1F", "User1L", "2023", "A", "Gryffindor", "user1@example.com", "123456789", "Student");
+        User user = new User(new String(), "User1F", "User1L", "2023", "A", "Gryffindor", "user1@example.com", "123456789", "Student");
         // return an existing user
         when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
         // Act and Assert

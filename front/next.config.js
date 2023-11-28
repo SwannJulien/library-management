@@ -15,6 +15,12 @@ const nextConfig = {
         port: "",
         pathname: "/v1/create-qr-code/**",
       },
+      {
+        protocol: "https",
+        hostname: "flaticon.com",
+        port: "",
+        pathname: "/free-icons/recycle-bin",
+      },
     ],
   },
 };

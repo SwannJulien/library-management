@@ -1,0 +1,17 @@
+.bookContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.blockContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.font_green {
+  color: green;
+}
+
+.font_red {
+  color: red;
+}

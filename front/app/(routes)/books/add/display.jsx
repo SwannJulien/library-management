@@ -4,6 +4,7 @@ export default function DisplayBook({ data }) {
   // Change the props to array to be able to use the map method
   const bookArray = [];
   bookArray.push(data);
+  console.log(bookArray);
 
   return (
     <div>
@@ -14,9 +15,10 @@ export default function DisplayBook({ data }) {
 
             <div className={styles.bookDetailsContainer}>
               <h2>{book.title}</h2>
+              {/* TODO: isbn can come as an array with multiple isbn by length so if there is multiple isbn it bugs */}
               <p className="mb-2">
                 <span className="fw-bold">Isbn: </span>
-                {book.identifiers.isbn_10[0] || book.identifiers.isbn_13[0]}
+                {book.identifiers.isbn_10 || book.identifiers.isbn_13}
               </p>
 
               {book.authors &&

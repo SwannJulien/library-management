@@ -32,8 +32,7 @@ public class UserService {
     }
 
     public Optional<User> findUserById(String id){
-        ObjectId restoredObjectId = new ObjectId(id);
-        Optional<User> user = userRepository.findById(restoredObjectId);
+        Optional<User> user = userRepository.findById(id);
         if (user.isPresent())
             return user;
         throw new RuntimeException("User with id " + id + " is not found");
@@ -50,8 +49,7 @@ public class UserService {
             userRepository.delete(user);
             return "User with email " + email + " has been successfully deleted";
         } else {
-            return null;
-            //throw new CustomException.ResourceNotFoundException("User with email: " + email + "is not found.");
+            throw new RuntimeException("User with email: " + email + "is not found.");
         }
     }
 
@@ -69,8 +67,7 @@ public class UserService {
             userRepository.save(existingUser);
             return "User with email: " + user.getEmail() + " successfully updated";
         } else {
-            return null;
-            //throw new CustomException.ResourceNotFoundException("No user with email: " + user.getEmail() + " found");
+            throw new RuntimeException("No user with email: " + user.getEmail() + " found");
         }
     }
 }

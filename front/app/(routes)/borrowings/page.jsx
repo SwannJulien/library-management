@@ -15,35 +15,37 @@ export default async function Borrowings() {
   console.log(data);
 
   return (
-    <main className="container">
-      <table className="table table-bordered table-hover mt-5">
-        <thead className="table-dark text-center">
-          <tr>
-            <th>TITLE</th>
-            <th>COPY ID</th>
-            <th>FIRST NAME</th>
-            <th>LAST NAME</th>
-            <th>EMAIL</th>
-            <th>BORROW DATE</th>
-            <th>DUE DATE</th>
-          </tr>
-        </thead>
-        <tbody className="table-group-divider">
-          {data.map((borrowing) => {
-            return (
-              <tr key={borrowing.copyId}>
-                <td>{borrowing.title}</td>
-                <td>{borrowing.copyId}</td>
-                <td>{borrowing.firstName}</td>
-                <td>{borrowing.lastName}</td>
-                <td>{borrowing.email}</td>
-                <td>{borrowing.borrowDate}</td>
-                <td>{borrowing.dueDate}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <main className="container-fluid">
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover mt-5 align-middle">
+          <thead className="table-dark text-center">
+            <tr>
+              <th>TITLE</th>
+              <th>COPY ID</th>
+              <th>FIRST NAME</th>
+              <th>LAST NAME</th>
+              <th>EMAIL</th>
+              <th>BORROW DATE</th>
+              <th>DUE DATE</th>
+            </tr>
+          </thead>
+          <tbody className="table-group-divider">
+            {data.map((borrowing) => {
+              return (
+                <tr key={borrowing.copyId}>
+                  <td>{borrowing.title}</td>
+                  <td>{borrowing.copyId}</td>
+                  <td>{borrowing.firstName}</td>
+                  <td>{borrowing.lastName}</td>
+                  <td>{borrowing.email}</td>
+                  <td>{borrowing.borrowDate}</td>
+                  <td>{borrowing.dueDate}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 }

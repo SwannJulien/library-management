@@ -13,13 +13,16 @@ export default function SaveButton({ data }) {
   function handleClick() {
     setLoading(true);
     const book = data;
+    console.log(book);
     renderData(book);
   }
 
   function renderData(book) {
     let authorName = [];
-    for (let i = 0; i < book.authors.length; i++) {
-      authorName.push(book.authors[i].name);
+    if (book.authors) {
+      for (let i = 0; i < book.authors.length; i++) {
+        authorName.push(book.authors[i].name);
+      }
     }
 
     // Create and push in array all subjects if book.subjects is true
@@ -70,7 +73,6 @@ export default function SaveButton({ data }) {
     // Get isbn_10 and isbn_13 as a string
     let isbn10, isbn13;
     const keys = Object.keys(book.identifiers);
-    console.log(keys);
 
     keys.forEach((key, index) => {
       switch (key) {

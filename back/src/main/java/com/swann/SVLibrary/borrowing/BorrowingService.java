@@ -45,11 +45,10 @@ public class BorrowingService {
                 Copy copy = copyOptional.get();
                 User user = userOptional.get();
 
-                ObjectId copyObjectId = copy.getId();
-                ObjectId userObjectId = user.getId();
+                String userId = user.getId();
 
             // 2. Check if user has exceeded the max of borrowings allowed
-                List<Borrowing> borrowingPerUser = getBorrowingByUser(userObjectId.toHexString());
+                List<Borrowing> borrowingPerUser = getBorrowingByUser(userId);
                 boolean isOverLimit = borrowingPerUser.size() >= MAX_BORROWINGS_ALLOWED;
                 if (isOverLimit) {
                     throw new RuntimeException("User " + user.getFirstName() + " " + user.getLastName() + " has exceeded the number of borrowings allowed");
@@ -58,7 +57,7 @@ public class BorrowingService {
                 } else if (!copy.getIsAvailable()) {
                     throw new RuntimeException("Copy " + copyId + " is not available");
                 } else {
-                    Borrowing borrowing = new Borrowing(copyObjectId, userObjectId, LocalDate.now(), LocalDate.now().plusMonths(1));
+                    Borrowing borrowing = new Borrowing(copyId, userId, LocalDate.now(), LocalDate.now().plusMonths(1));
                     borrowingRepository.save(borrowing);
                     copyService.updateAvailabilityOfCopy(copyId, false);
                     return "Borrowing successfully created";
@@ -72,8 +71,8 @@ public class BorrowingService {
     }
 
     public Optional<Borrowing> findBorrowingByCopyId(String copyId){
-        ObjectId restoredObjectId = new ObjectId(copyId);
-        Optional<Borrowing> borrowing = borrowingRepository.findByCopyId(restoredObjectId);
+
+        Optional<Borrowing> borrowing = borrowingRepository.findByCopyId(copyId);
         if (borrowing.isPresent())
             return borrowing;
         throw new RuntimeException("No borrowing of copy id: " + copyId + " found in the system");
