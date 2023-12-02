@@ -1,6 +1,8 @@
+import AddCopy from "@/app/components/addCopyButton";
 import isImageFound from "@/app/library/isImageFound";
 import bin from "@/public/recycle-bin.png";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./styles.module.css";
 
 export default async function BookDetails(params) {
@@ -26,12 +28,18 @@ export default async function BookDetails(params) {
     return response.json();
   }
 
+  async function handleAddCopy() {
+    const response = fetch(`http://localhost:8080/copies/${isbn}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   const book = await getBook();
   const bookId = book.id;
-
   const copies = await getCopies(bookId);
-  console.log(copies);
-
   const bookArray = [];
   bookArray.push(book);
 
@@ -68,8 +76,9 @@ export default async function BookDetails(params) {
           );
         })}
       </div>
-      <div className="table-responsive">
-        <table className="table table table-hover align-middle mt-5">
+      <div className="table-responsive mt-5">
+        <AddCopy isbn={isbn}></AddCopy>
+        <table className="table table table-hover align-middle">
           <thead className="fw-semibold">
             <tr>
               <td>COPY ID</td>
@@ -84,7 +93,9 @@ export default async function BookDetails(params) {
                   <td>{copy.id}</td>
                   <td>{copy.isAvailable ? <span className={styles.font_green}>Available</span> : <span className={styles.font_red}>Not available</span>}</td>
                   <td>
-                    <Image src={bin} alt="Picture of a bin" width="20" height="20" />
+                    <Link href={`/books/delete/${copy.id}?isbn=${isbn}`}>
+                      <Image src={bin} alt="Picture of a bin" width="20" height="20" />
+                    </Link>
                   </td>
                 </tr>
               );

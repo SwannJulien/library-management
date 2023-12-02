@@ -13,7 +13,7 @@ export const metadata = {
   description: "Borrow, return, check all book's library in one click !",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout(props) {
   return (
     <html lang="en">
       <ImportBsJS />
@@ -92,7 +92,8 @@ export default function RootLayout({ children }) {
             </div>
           </div>
         </nav>
-        <Suspense fallback={<Loading />}>{children}</Suspense>
+        <Suspense fallback={<Loading />}>{props.children}</Suspense>
+        {props.parallel}
       </body>
     </html>
   );

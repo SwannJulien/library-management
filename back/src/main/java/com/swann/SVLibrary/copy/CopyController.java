@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -32,10 +34,15 @@ public class CopyController {
     }
 
     @PostMapping("copies/{isbn}")
-    public ResponseEntity<String> addExistingBookCopy (@PathVariable String isbn){
+    public ResponseEntity<Object> addExistingBookCopy (@PathVariable String isbn){
         try {
             Copy copy = copyService.addCopyOfExistingBook(isbn);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Copy created " + copy);
+            Map<String, String> data = new HashMap<>();
+            data.put("message", "Copy created");
+            data.put("copyId", copy.getId());
+            data.put("bookId", copy.getBookId());
+            data.put("isAvailable", copy.getIsAvailable().toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(data);
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

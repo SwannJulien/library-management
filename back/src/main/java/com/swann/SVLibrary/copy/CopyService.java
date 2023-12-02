@@ -75,7 +75,7 @@ public class CopyService {
            Optional<Borrowing> optionalBorrowing = borrowingRepository.findByCopyId(copyId);
 
            if (optionalBorrowing.isPresent()){
-               throw new RuntimeException("There is an active borrowing for this book. " +
+               throw new RuntimeException ("There is an active borrowing for this book. " +
                        "First you need to delete the borrowing. Only then you could delete the copy.");
            } else {
                String bookId = copy.getBookId();

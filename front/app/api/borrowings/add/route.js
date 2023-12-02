@@ -12,7 +12,6 @@ export async function POST(request) {
 
   if (!response.ok) {
     const serverResponse = await response.json();
-    console.log(serverResponse);
     const serverMessage = serverResponse.message;
     const status = response.status;
     return Response.json({ serverMessage, status });
