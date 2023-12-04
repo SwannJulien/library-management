@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+//import { revalidatePath } from "next/cache";
 export async function DELETE(request) {
   const data = await request.json();
   console.log(data.isbn.isbn);
@@ -12,10 +12,11 @@ export async function DELETE(request) {
 
     return Response.json({ message, status });
   } else {
-    const message = await response.text();
+    const serverResponse = await response.json();
+    const message = serverResponse.message;
     const status = response.status;
 
-    revalidatePath(`{/books/${data.isbn.isbn}}`);
+    //revalidatePath(`{/books/${data.isbn.isbn}}`);
     return Response.json({ message, status });
   }
 }

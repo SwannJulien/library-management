@@ -1,4 +1,4 @@
-import AddCopy from "@/app/components/addCopyButton";
+import AddCopy from "@/app/(routes)/books/(details)/[isbn]/addCopy";
 import isImageFound from "@/app/library/isImageFound";
 import bin from "@/public/recycle-bin.png";
 import Image from "next/image";
@@ -18,9 +18,7 @@ export default async function BookDetails(params) {
   }
 
   async function getCopies(id) {
-    const response = await fetch(`http://localhost:8080/all-copies/${id}`, {
-      next: { revalidate: 0 },
-    });
+    const response = await fetch(`http://localhost:8080/all-copies/${id}`, { next: { tags: ["copies"] }, next: { revalidate: 0 } });
 
     if (!response.ok) {
       throw new Error("Failed to fetch data");
@@ -28,17 +26,9 @@ export default async function BookDetails(params) {
     return response.json();
   }
 
-  async function handleAddCopy() {
-    const response = fetch(`http://localhost:8080/copies/${isbn}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-
   const book = await getBook();
   const bookId = book.id;
+  const bookTitle = book.title;
   const copies = await getCopies(bookId);
   const bookArray = [];
   bookArray.push(book);
@@ -77,8 +67,8 @@ export default async function BookDetails(params) {
         })}
       </div>
       <div className="table-responsive mt-5">
-        <AddCopy isbn={isbn}></AddCopy>
-        <table className="table table table-hover align-middle">
+        <AddCopy isbn={isbn} title={bookTitle}></AddCopy>
+        <table className="table table table-hover align-middle mt-3">
           <thead className="fw-semibold">
             <tr>
               <td>COPY ID</td>

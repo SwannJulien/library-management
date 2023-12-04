@@ -38,7 +38,7 @@ public class CopyController {
         try {
             Copy copy = copyService.addCopyOfExistingBook(isbn);
             Map<String, String> data = new HashMap<>();
-            data.put("message", "Copy created");
+            data.put("message", "Copy successfully created");
             data.put("copyId", copy.getId());
             data.put("bookId", copy.getBookId());
             data.put("isAvailable", copy.getIsAvailable().toString());
@@ -49,8 +49,16 @@ public class CopyController {
     }
 
     @DeleteMapping("copies/{id}")
-    public String removeCopy(@PathVariable String id){
-        return copyService.removeCopy(id);
+    public ResponseEntity<Object> removeCopy(@PathVariable String id)
+    {
+        try{
+            String message = copyService.removeCopy(id);
+            Map<String, String> data = new HashMap<>();
+            data.put("message", message);
+            return ResponseEntity.status(HttpStatus.OK).body(data);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
     }
 
     @GetMapping("all-copies/{bookId}")

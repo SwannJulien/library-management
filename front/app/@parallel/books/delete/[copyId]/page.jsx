@@ -21,16 +21,24 @@ export default function DeleteCopy(params) {
       headers: {
         "Content-Type": "application/json",
       },
+      next: { revalidate: 0 },
       body: JSON.stringify(data),
     });
 
     const serverMessage = await response.json();
     const { message, status } = serverMessage;
-    //Check if respone is OK or not
-    status != 200 ? setSuccess(false) : setSuccess(true);
 
-    setServerResponse(message);
-    setLoading(false);
+    if (status === 200) {
+      setSuccess(true);
+      setServerResponse(message);
+      setLoading(false);
+      router.refresh();
+      return router.back();
+    } else {
+      setSuccess(false);
+      setServerResponse(message);
+      setLoading(false);
+    }
   }
 
   function handleEscape(e) {

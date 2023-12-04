@@ -1,10 +1,9 @@
 import isImageFound from "@/app/library/isImageFound";
 import styles from "./styles.module.css";
-export default function DisplayBook({ data }) {
+export default function Display({ data }) {
   // Change the props to array to be able to use the map method
   const bookArray = [];
   bookArray.push(data);
-  console.log(bookArray);
 
   return (
     <div>
